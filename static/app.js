@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('preferenceInput');
+    const genderFilter = document.getElementById('genderFilter');
     const searchBtn = document.getElementById('searchBtn');
     const suggestions = document.querySelectorAll('.suggestion-chip');
     const loader = document.getElementById('loader');
@@ -48,7 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     preferences: query,
-                    top_k: 6 // Show top 6 matches
+                    top_k: 6, // Show top 6 matches
+                    gender: genderFilter ? genderFilter.value : "All"
                 })
             });
 
@@ -81,23 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCard(data, index) {
         const item = data.cologne;
-        const distance = data.distance;
-
-        // Calculate match percentage
-        // L2 distance squared = 2 - 2*cos_sim
-        // cos_sim = 1 - (L2^2 / 2) Wait, FAISS FlatL2 returns squared distance!
-        // Actually, faiss.normalize_L2 makes it so FlatL2 returns squared Euclidean distance.
-        // So distance is already squared.
-        // cos_sim = 1 - (distance / 2)
-        const cosSim = 1 - (distance / 2);
-        // Map 0.5-1.0 to 0-100% for a better user experience (most related text is above 0.5 cos sim)
-        // If cosSim is < 0.5, we just cap it or map it lower.
-        let rawPercent = (cosSim - 0.5) * 200;
-        if (rawPercent > 99) rawPercent = 99;
-        if (rawPercent < 10) rawPercent = 10;
-
-        // Add a bit of determinism but variety based on rank
-        const visualPercent = Math.min(99, Math.round(rawPercent));
+        const matchPercent = data.match;
 
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector('.fragrance-card');
@@ -107,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clone.querySelector('.brand-name').textContent = item.brand;
         clone.querySelector('.fragrance-name').textContent = item.name;
-        clone.querySelector('.match-percentage').textContent = `${visualPercent}% Match`;
-        clone.querySelector('.view-btn').href = item.url;
+        clone.querySelector('.match-percentage').textContent = `${matchPercent}% Match`;
 
         const notesContainer = clone.querySelector('.notes-container');
 

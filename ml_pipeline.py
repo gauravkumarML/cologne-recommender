@@ -53,9 +53,9 @@ def build_index():
     mapping = {}
     
     for i, item in enumerate(colognes):
-        # We create a rich text description of the cologne
+        # De-weight the brand, rely strictly on olfactory profile
         notes_text = ", ".join(item['notes'])
-        text = f"{item['brand']} {item['name']} features notes of {notes_text}."
+        text = f"{item['name']} features notes of {notes_text}."
         texts.append(text)
         mapping[i] = item['id']
         
@@ -69,8 +69,8 @@ def build_index():
     embeddings = np.array(embeddings).astype('float32')
     dimension = embeddings.shape[1]
     
-    print(f"Building FAISS Index with dimension {dimension}...")
-    index = faiss.IndexFlatL2(dimension)
+    print(f"Building FAISS Index with dimension {dimension} using Inner Product...")
+    index = faiss.IndexFlatIP(dimension)
     
     # Normalize vectors for cosine similarity (L2 norm)
     faiss.normalize_L2(embeddings)
@@ -127,6 +127,44 @@ def search_similar(cologne_id: int, top_k: int = 5):
              results.append({"db_id": db_id, "distance": float(dist)})
              
     return results
+
+def search_raw_text(query: str, index, model, top_k: int = 5):
+    """Embeds a single text query, normalizes it, and passes it to index.search()"""
+    embedding = model.encode([query])
+    embedding = np.array(embedding).astype('float32')
+    # Must normalize query for inner product / cosine similarity
+    faiss.normalize_L2(embedding)
+    
+    distances, indices = index.search(embedding, top_k)
+    return distances, indices
+
+def add_cologne(cologne_data, index, model, mapping):
+    """
+    Appends a single new embedding to the existing FAISS index in memory 
+    and updates the JSON mapping without rebuilding the entire index.
+    cologne_data should be a dict like: {'id': 999, 'name': '...", 'notes': ['...']}
+    """
+    notes_text = ", ".join(cologne_data.get('notes', []))
+    text = f"{cologne_data.get('name', '')} features notes of {notes_text}."
+    
+    # Embed and normalize
+    embedding = model.encode([text])
+    embedding = np.array(embedding).astype('float32')
+    faiss.normalize_L2(embedding)
+    
+    # Add to index
+    index.add(embedding)
+    
+    # Update mapping
+    new_faiss_id = index.ntotal - 1
+    mapping[new_faiss_id] = cologne_data['id']
+    
+    # Save back to disk
+    faiss.write_index(index, INDEX_PATH)
+    with open(MAPPING_PATH, 'w') as f:
+        json.dump(mapping, f)
+        
+    print(f"Successfully added {cologne_data.get('name')} to index and updated mapping.")
 
 if __name__ == "__main__":
     build_index()

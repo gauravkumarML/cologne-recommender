@@ -48,6 +48,7 @@ def read_root():
 class QuizRequest(BaseModel):
     preferences: str
     top_k: int = 5
+    gender: str = "All"
 
 def get_cologne_details(db_ids):
     if not db_ids:
@@ -58,7 +59,7 @@ def get_cologne_details(db_ids):
     
     placeholders = ','.join('?' * len(db_ids))
     query = f'''
-    SELECT c.id, c.name, c.brand, c.url, GROUP_CONCAT(n.name, ', ')
+    SELECT c.id, c.name, c.brand, c.url, c.gender, GROUP_CONCAT(n.name, ', ')
     FROM colognes c
     LEFT JOIN cologne_notes cn ON c.id = cn.cologne_id
     LEFT JOIN notes n ON cn.note_id = n.id
@@ -72,12 +73,13 @@ def get_cologne_details(db_ids):
     
     colognes = {}
     for row in results:
-        notes = row[4].split(', ') if row[4] else []
+        notes = row[5].split(', ') if row[5] else []
         colognes[row[0]] = {
             "id": row[0],
             "name": row[1],
             "brand": row[2],
             "url": row[3],
+            "gender": row[4],
             "notes": notes
         }
         
@@ -98,7 +100,7 @@ def list_colognes(limit: int = 50):
     return results
 
 @app.get("/recommend/similar/{cologne_id}")
-def recommend_similar(cologne_id: int, top_k: int = 5):
+def recommend_similar(cologne_id: int, top_k: int = 5, gender: str = "All"):
     """Pathway 1: Direct match based on a known cologne ID."""
     reverse_mapping = {v: k for k, v in id_mapping.items()}
     if cologne_id not in reverse_mapping:
@@ -112,9 +114,11 @@ def recommend_similar(cologne_id: int, top_k: int = 5):
         raise HTTPException(status_code=500, detail=f"Error reconstructing vector: {e}")
         
     query_vector = np.array([vector]).astype('float32')
-    distances, indices = index.search(query_vector, top_k + 1)
     
-    # Extract IDs corresponding to closest matches, skip the first (which is the query itself)
+    # Pre-fetch more candidates to account for potential filtering
+    fetch_k = top_k * 5 if gender != "All" else top_k
+    distances, indices = index.search(query_vector, fetch_k + 1)
+    
     matched_db_ids = []
     match_distances = []
     
@@ -127,21 +131,26 @@ def recommend_similar(cologne_id: int, top_k: int = 5):
             
     colognes_data = get_cologne_details(matched_db_ids)
     
-    return [
-         {"cologne": col, "distance": dist} 
-         for col, dist in zip(colognes_data, match_distances)
-    ]
+    results = []
+    for col, dist in zip(colognes_data, match_distances):
+        if gender != "All" and col.get("gender") != gender:
+            continue
+        # Convert Inner Product to generic Match % (0-100)
+        match_pct = round(max(0, dist) * 100)
+        results.append({"cologne": col, "match": match_pct})
+        if len(results) >= top_k:
+            break
+            
+    return results
 
 @app.post("/recommend/quiz")
 def recommend_quiz(request: QuizRequest):
-    """Pathway 2: General text/preferences search (the smart quiz format)."""
-    # Embed the user prompt
-    text = f"Looking for a fragrance with these qualities: {request.preferences}"
-    embedding = model.encode([text])
-    embedding = np.array(embedding).astype('float32')
-    faiss.normalize_L2(embedding)
+    """Pathway 2: General text/preferences search using search_raw_text."""
+    from ml_pipeline import search_raw_text
     
-    distances, indices = index.search(embedding, request.top_k)
+    text_query = f"Looking for a fragrance with these qualities: {request.preferences}"
+    fetch_k = request.top_k * 5 if request.gender != "All" else request.top_k
+    distances, indices = search_raw_text(text_query, index, model, fetch_k)
     
     matched_db_ids = []
     match_distances = []
@@ -154,8 +163,14 @@ def recommend_quiz(request: QuizRequest):
             
     colognes_data = get_cologne_details(matched_db_ids)
     
-    return [
-         {"cologne": col, "distance": dist} 
-         for col, dist in zip(colognes_data, match_distances)
-    ]
+    results = []
+    for col, dist in zip(colognes_data, match_distances):
+        if request.gender != "All" and col.get("gender") != request.gender:
+            continue
+        match_pct = round(max(0, dist) * 100)
+        results.append({"cologne": col, "match": match_pct})
+        if len(results) >= request.top_k:
+            break
+            
+    return results
 

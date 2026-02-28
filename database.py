@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import json
 
 DB_PATH = "colognes.db"
 
@@ -13,7 +14,12 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         brand TEXT NOT NULL,
-        url TEXT UNIQUE NOT NULL
+        url TEXT UNIQUE NOT NULL,
+        gender TEXT DEFAULT 'Unisex',
+        positive_reviews INTEGER DEFAULT 0,
+        neutral_reviews INTEGER DEFAULT 0,
+        negative_reviews INTEGER DEFAULT 0,
+        review_texts TEXT DEFAULT '[]'
     )
     ''')
     
@@ -50,13 +56,19 @@ def get_cologne_by_url(url: str):
         return {"id": result[0], "name": result[1], "brand": result[2], "url": url}
     return None
 
-def save_cologne_data(name, brand, url, notes_list):
+def save_cologne_data(name, brand, url, notes_list, gender="Unisex", pos_reviews=0, neu_reviews=0, neg_reviews=0, review_texts=None):
+    if review_texts is None:
+        review_texts = []
+        
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     try:
         # Insert or ignore cologne
-        cursor.execute("INSERT OR IGNORE INTO colognes (name, brand, url) VALUES (?, ?, ?)", (name, brand, url))
+        cursor.execute('''
+        INSERT OR IGNORE INTO colognes (name, brand, url, gender, positive_reviews, neutral_reviews, negative_reviews, review_texts) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (name, brand, url, gender, pos_reviews, neu_reviews, neg_reviews, json.dumps(review_texts)))
         
         # Get cologne ID
         cursor.execute("SELECT id FROM colognes WHERE url = ?", (url,))

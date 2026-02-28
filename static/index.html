@@ -51,6 +51,13 @@
                 <input type="text" id="preferenceInput"
                     placeholder="Describe your ideal fragrance (e.g., spicy and woody, fresh citrus)..."
                     autocomplete="off">
+                <select id="genderFilter"
+                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; padding: 10px; margin-right: 10px; outline: none; cursor: pointer;">
+                    <option style="color: black;" value="All">All Genders</option>
+                    <option style="color: black;" value="Male">Male</option>
+                    <option style="color: black;" value="Female">Female</option>
+                    <option style="color: black;" value="Unisex">Unisex</option>
+                </select>
                 <button id="searchBtn" class="primary-btn">
                     <span>Discover</span>
                     <i class="fa-solid fa-arrow-right"></i>
@@ -91,11 +98,8 @@
                         <!-- Notes injected here -->
                     </div>
 
-                    <div class="card-footer">
-                        <a href="#" class="view-btn" target="_blank" rel="noopener noreferrer">
-                            <span>View Details</span>
-                            <i class="fa-solid fa-external-link-alt"></i>
-                        </a>
+                    <div class="card-footer" style="padding-bottom: 20px;">
+                        <!-- Custom links have been explicitly removed by user request -->
                     </div>
             </div>
         </article>
