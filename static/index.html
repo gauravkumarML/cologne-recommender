@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Aura | Discover Your Signature Scent</title>
+
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-droplet"></i>
+            <span>L'Aura</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Discover</a>
+            <a href="#">Collection</a>
+            <a href="#">About</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="hero">
+            <h1>Find your signature scent.</h1>
+            <p>Tell us what you love—whether it's "a warm vanilla evening" or "fresh oceanic mornings"—and our AI will
+                craft your perfect fragrance match.</p>
+        </header>
+
+        <section class="search-section">
+            <div class="search-box glass-panel">
+                <i class="fa-solid fa-wand-magic-sparkles search-icon"></i>
+                <input type="text" id="preferenceInput"
+                    placeholder="Describe your ideal fragrance (e.g., spicy and woody, fresh citrus)..."
+                    autocomplete="off">
+                <button id="searchBtn" class="primary-btn">
+                    <span>Discover</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="suggestions">
+                <span class="suggestion-chip">"Dark roasted coffee and roses"</span>
+                <span class="suggestion-chip">"Clean linen and lavender"</span>
+                <span class="suggestion-chip">"Smoky oud and sweet amber"</span>
+            </div>
+        </section>
+
+        <div id="loader" class="loader-container hidden">
+            <div class="spinner"></div>
+            <p>Analyzing scent profiles...</p>
+        </div>
+
+        <section id="resultsSection" class="results-grid hidden">
+            <!-- Results will be injected here by JS -->
+        </section>
+    </main>
+
+    <!-- Template for Fragrance Card -->
+    <template id="fragranceCardTemplate">
+        <article class="fragrance-card glass-panel fade-in">
+            <div class="card-header">
+                <div class="match-badge">
+                    <i class="fa-solid fa-star"></i>
+                    <span class="match-percentage">98% Match</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <h3 class="brand-name">Brand</h4>
+                    <h2 class="fragrance-name">Name</h2>
+
+                    <div class="notes-container">
+                        <!-- Notes injected here -->
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="#" class="view-btn" target="_blank" rel="noopener noreferrer">
+                            <span>View Details</span>
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </a>
+                    </div>
+            </div>
+        </article>
+    </template>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
