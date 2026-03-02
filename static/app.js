@@ -9,6 +9,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentGender = "All";
 
+    // 1. Ambient Background Interaction
+    document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.pageX) / 30;
+        const y = (window.innerHeight / 2 - e.pageY) / 30;
+        gsap.to('.mesh-1', { x: x, y: y, duration: 1, ease: 'power2.out' });
+        gsap.to('.mesh-2', { x: x * -1.5, y: y * -1.5, duration: 1.5, ease: 'power2.out' });
+        gsap.to('.mesh-3', { x: x * 0.5, y: y * 0.5, duration: 1.2, ease: 'power2.out' });
+    });
+
+    // 2. Magnetic Micro-interactions
+    const magneticElements = document.querySelectorAll('.primary-btn, .segment');
+    magneticElements.forEach(elem => {
+        elem.addEventListener('mousemove', (e) => {
+            const rect = elem.getBoundingClientRect();
+            const x = (e.clientX - rect.left - rect.width / 2) * 0.4;
+            const y = (e.clientY - rect.top - rect.height / 2) * 0.4;
+            gsap.to(elem, { x: x, y: y, duration: 0.3, ease: 'power2.out' });
+        });
+        elem.addEventListener('mouseleave', () => {
+            gsap.to(elem, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
+        });
+    });
+
     // Handle segmented control clicks
     genderTabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -81,6 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.forEach((item, index) => {
                     renderCard(item, index);
                 });
+
+                // 3. Staggered Spring Reveal
+                gsap.fromTo('.fragrance-card',
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "back.out(1.7)" }
+                );
             }
             resultsSection.classList.remove('hidden');
 
@@ -98,9 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector('.fragrance-card');
-
-        // Stagger animation
-        card.style.animationDelay = `${index * 0.1}s`;
 
         clone.querySelector('.brand-name').textContent = item.brand;
         clone.querySelector('.fragrance-name').textContent = item.name;
@@ -125,6 +151,38 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             notesContainer.innerHTML = '<span class="note-tag" style="opacity: 0.5;">NOTES UNAVAILABLE</span>';
         }
+
+        // 4. 3D Tilt Hover & Lighting
+        const shimmer = document.createElement('div');
+        shimmer.className = 'shimmer';
+        card.appendChild(shimmer);
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            gsap.to(card, {
+                rotateY: (x / rect.width) * 15,
+                rotateX: -(y / rect.height) * 15,
+                duration: 0.5,
+                ease: 'power2.out',
+                transformPerspective: 1000,
+                transformOrigin: "center"
+            });
+
+            gsap.to(shimmer, {
+                backgroundPosition: `${((x / rect.width) + 0.5) * 100}% ${((y / rect.height) + 0.5) * 100}%`,
+                duration: 0.5,
+                ease: "power2.out",
+                opacity: 1
+            });
+        });
+
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, { rotateY: 0, rotateX: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
+            gsap.to(shimmer, { opacity: 0, duration: 0.5, ease: "power2.out" });
+        });
 
         resultsSection.appendChild(clone);
     }
