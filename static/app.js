@@ -104,38 +104,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clone.querySelector('.brand-name').textContent = item.brand;
         clone.querySelector('.fragrance-name').textContent = item.name;
-        
-        // Update the SVG Ring and Text
-        const circleParams = `${matchPercent}, 100`;
-        // Use timeout to allow CSS transition to play from 0 to target
-        setTimeout(() => {
-            const circle = card.querySelector('.match-ring-circle');
-            if (circle) circle.setAttribute('stroke-dasharray', circleParams);
-        }, 50);
-        clone.querySelector('.match-percentage-text').textContent = `${matchPercent}%`;
+
+        clone.querySelector('.match-percentage-text').textContent = `MATCH: ${matchPercent}%`;
 
         const notesContainer = clone.querySelector('.notes-container');
 
         if (item.notes && item.notes.length > 0) {
             // Show up to 8 notes
             const displayNotes = item.notes.slice(0, 8);
-            displayNotes.forEach(note => {
-                const span = document.createElement('span');
-                span.className = 'note-tag';
-                span.textContent = note;
-                notesContainer.appendChild(span);
-            });
+            const notesString = displayNotes.join(' / ').toUpperCase();
+
+            const span = document.createElement('span');
+            span.className = 'note-tag';
+            span.textContent = notesString;
 
             if (item.notes.length > 8) {
-                const moreSpan = document.createElement('span');
-                moreSpan.className = 'note-tag';
-                moreSpan.style.background = 'transparent';
-                moreSpan.style.border = 'none';
-                moreSpan.textContent = `+${item.notes.length - 8} more`;
-                notesContainer.appendChild(moreSpan);
+                span.textContent += ` / +${item.notes.length - 8} MORE`;
             }
+            notesContainer.appendChild(span);
         } else {
-            notesContainer.innerHTML = '<span class="note-tag" style="opacity: 0.5;">Notes unavailable</span>';
+            notesContainer.innerHTML = '<span class="note-tag" style="opacity: 0.5;">NOTES UNAVAILABLE</span>';
         }
 
         resultsSection.appendChild(clone);

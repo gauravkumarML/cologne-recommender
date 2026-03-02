@@ -1,22 +1,22 @@
 :root {
-    --bg-color: #0A0A0E;
-    --surface-color: rgba(21, 21, 26, 0.7);
-    --border-color: rgba(255, 255, 255, 0.08); /* 1px inner border glow */
-    --text-primary: #FFFFFF;
-    --text-secondary: #A9A9B3;
-    --accent-1: #2A1B38;
-    --accent-2: #818cf8;
-    --accent-glow: rgba(42, 27, 56, 0.6);
+    --bg-color: #F9F8F6;
+    --surface-color: #F9F8F6;
+    --border-color: #2C2C2C;
+    --text-primary: #2C2C2C;
+    --text-secondary: #777777;
+    --accent-1: #3B4A5A;
+    --accent-2: #8A9A86;
+    --accent-glow: transparent;
 
-    --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-sans: 'Space Mono', 'Courier New', monospace;
     --font-serif: 'Playfair Display', Georgia, serif;
 
-    --radius-md: 12px;
-    --radius-lg: 24px;
-    --radius-full: 9999px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
+    --radius-full: 0px;
 
-    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-swag: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-fast: 0.1s ease-in-out;
+    --transition-swag: 0.2s ease-in-out;
 }
 
 * {
@@ -26,7 +26,7 @@
 }
 
 body {
-    background-color: var(--bg-color);
+    background-color: transparent;
     color: var(--text-primary);
     font-family: var(--font-sans);
     line-height: 1.5;
@@ -36,8 +36,8 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Background Effects */
-.background-effects {
+/* Ambient Mesh Gradient Background */
+.ambient-background {
     position: fixed;
     top: 0;
     left: 0;
@@ -45,9 +45,54 @@ body {
     height: 100vh;
     z-index: -1;
     overflow: hidden;
-    pointer-events: none;
-    /* Soft radial gradient of midnight purple glowing behind */
-    background: radial-gradient(circle at 50% 30%, var(--accent-1) 0%, var(--bg-color) 60%);
+    background-color: var(--bg-color);
+}
+
+.mesh-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.8;
+    animation: drift 20s infinite ease-in-out alternate;
+}
+
+.mesh-1 {
+    top: -10%;
+    left: -10%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, #FFFDF8 0%, transparent 60%);
+    animation-duration: 22s;
+}
+
+.mesh-2 {
+    bottom: -20%;
+    right: -10%;
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, #E5EDE3 0%, transparent 70%);
+    animation-duration: 25s;
+    animation-delay: -5s;
+}
+
+.mesh-3 {
+    top: 30%;
+    left: 40%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, #F9F8F6 0%, transparent 60%);
+    animation-duration: 18s;
+    animation-delay: -10s;
+}
+
+@keyframes drift {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(8%, 12%) scale(1.1);
+    }
 }
 
 /* Navigation */
@@ -107,8 +152,8 @@ body {
 .hero {
     text-align: center;
     max-width: 800px;
-    margin-top: 4rem;
-    margin-bottom: 4rem;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
 }
 
 .hero h1 {
@@ -118,10 +163,7 @@ body {
     margin-bottom: 1.5rem;
     font-weight: 400;
     letter-spacing: -1px;
-    background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--text-primary);
 }
 
 .hero p {
@@ -132,44 +174,46 @@ body {
     font-weight: 300;
 }
 
-/* Glassmorphism Generic */
+/* Glassmorphism Generic -> Flat Archive */
 .glass-panel {
     background: var(--surface-color);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    /* Faint inner border glow handled via box-shadow for cards, standard for others */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
 }
 
 /* Search Box */
 .search-section {
     width: 100%;
     max-width: 768px;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
+}
+
+.search-controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
 }
 
 .search-box {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1rem 0.75rem 1.5rem;
-    border-radius: var(--radius-full);
+    padding: 0.5rem 0rem;
+    border-radius: 0;
     transition: var(--transition-fast);
     position: relative;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.05); /* Slight translucent bg */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Delicate border */
-    backdrop-filter: blur(20px);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .search-box:focus-within {
-    box-shadow: 0 0 20px var(--accent-glow);
-    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    border-bottom: 3px solid var(--border-color);
 }
 
 .search-box .search-icon {
-    color: var(--accent-1);
-    font-size: 1.25rem;
-    margin-right: 1rem;
+    display: none;
 }
 
 .search-box input {
@@ -188,14 +232,15 @@ body {
 }
 
 .primary-btn {
-    background: var(--text-primary);
-    color: var(--bg-color);
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0;
     font-family: var(--font-sans);
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -204,22 +249,26 @@ body {
 }
 
 .primary-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    transform: none;
+    background: var(--text-primary);
+    color: var(--bg-color);
+    box-shadow: none;
 }
 
 .primary-btn:active {
-    transform: translateY(0);
+    transform: translateY(1px);
 }
 
-/* Segmented Control Pills */
+/* Inline Text Filters */
 .gender-segmented-control {
     display: flex;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 4px;
-    border-radius: var(--radius-full);
-    margin-right: 12px;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
 }
 
 .gender-segmented-control .segment {
@@ -227,12 +276,13 @@ body {
     border: none;
     color: var(--text-secondary);
     font-family: var(--font-sans);
-    font-weight: 500;
+    font-weight: 400;
     font-size: 0.85rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-full);
+    padding: 0;
+    border-radius: 0;
     cursor: pointer;
     transition: var(--transition-fast);
+    text-decoration: line-through;
 }
 
 .gender-segmented-control .segment:hover {
@@ -240,10 +290,12 @@ body {
 }
 
 .gender-segmented-control .segment.active {
-    background: rgba(255, 255, 255, 0.1); /* Frosted glass bg for active */
-    backdrop-filter: blur(10px);
+    background: transparent;
+    backdrop-filter: none;
     color: var(--text-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    box-shadow: none;
+    text-decoration: none;
 }
 
 .suggestions {
@@ -251,24 +303,26 @@ body {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .suggestion-chip {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    font-family: var(--font-sans);
     color: var(--text-secondary);
-    padding: 0.4rem 1rem;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--border-color);
-    background: rgba(255, 255, 255, 0.02);
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    border-bottom: 1px dashed var(--text-secondary);
     cursor: pointer;
     transition: var(--transition-fast);
 }
 
 .suggestion-chip:hover {
-    background: var(--surface-color);
+    background: transparent;
     color: var(--text-primary);
-    border-color: var(--accent-1);
+    border-color: var(--text-primary);
 }
 
 /* Loader */
@@ -339,7 +393,7 @@ body {
 }
 
 .fragrance-card {
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -347,15 +401,14 @@ body {
     transition: var(--transition-swag);
     position: relative;
     overflow: hidden;
-    /* Very faint 1px inner border edge glow */
-    box-shadow: inset 0 0 0 1px var(--border-color), 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: none;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
 }
 
 .fragrance-card:hover {
-    transform: translateY(-8px);
-    /* Soft dark purple drop shadow on hover */
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 10px 40px var(--accent-glow);
+    transform: none;
+    box-shadow: none;
 }
 
 .card-header {
@@ -363,45 +416,27 @@ body {
     justify-content: flex-end;
 }
 
-/* Match Percentage Ring */
-.match-ring-container {
+/* Match Percentage Stamp */
+.match-stamp-container {
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
-    width: 48px;
-    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.match-ring {
-    width: 48px;
-    height: 48px;
-    transform: rotate(-90deg);
-}
-
-.ring-bg {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.05);
-    stroke-width: 2.5;
-}
-
-.ring-fill {
-    fill: none;
-    stroke: #FFFFFF;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    transition: stroke-dasharray 1s ease-out;
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+    border: 2px dashed var(--accent-1);
+    padding: 0.2rem 0.5rem;
+    transform: rotate(2deg);
+    opacity: 0.8;
 }
 
 .match-percentage-text {
-    position: absolute;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--accent-1);
     font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .card-body {
@@ -411,11 +446,12 @@ body {
 }
 
 .brand-name {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: var(--text-secondary);
     margin-bottom: 0.25rem;
+    font-family: var(--font-sans);
 }
 
 .fragrance-name {
@@ -427,21 +463,17 @@ body {
 }
 
 .notes-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    display: block;
     margin-bottom: 2rem;
     flex: 1;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 .note-tag {
-    font-size: 0.7rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-secondary);
-    border: none;
-    letter-spacing: 0.5px;
+    display: inline;
 }
 
 .card-footer {

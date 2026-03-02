@@ -10,20 +10,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="/static/style.css?v=2">
+    <link rel="stylesheet" href="/static/style.css?v=5">
 </head>
 
 <body>
-    <div class="background-effects">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
+    <div class="ambient-background">
+        <div class="mesh-orb mesh-1"></div>
+        <div class="mesh-orb mesh-2"></div>
+        <div class="mesh-orb mesh-3"></div>
     </div>
 
     <nav class="navbar">
@@ -41,32 +41,34 @@
     <main class="container">
         <header class="hero">
             <h1>Find your signature scent.</h1>
-            <p>Tell us what you love—whether it's "a warm vanilla evening" or "fresh oceanic mornings"—and our AI will
-                craft your perfect fragrance match.</p>
+            <p>Translate a mood, a memory, or a specific ingredient into your next signature scent.</p>
         </header>
 
         <section class="search-section">
-            <div class="search-box glass-panel">
-                <i class="fa-solid fa-wand-magic-sparkles search-icon"></i>
-                <input type="text" id="preferenceInput"
-                    placeholder="Describe your ideal fragrance (e.g., spicy and woody, fresh citrus)..."
-                    autocomplete="off">
+            <div class="search-controls-wrapper">
                 <div class="gender-segmented-control" id="genderTabs">
                     <button class="segment active" data-value="All">All</button>
                     <button class="segment" data-value="Male">Male</button>
                     <button class="segment" data-value="Female">Female</button>
                     <button class="segment" data-value="Unisex">Unisex</button>
                 </div>
-                <button id="searchBtn" class="primary-btn">
-                    <span>Discover</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
+
+                <div class="search-box glass-panel">
+                    <i class="fa-solid fa-wand-magic-sparkles search-icon"></i>
+                    <input type="text" id="preferenceInput" placeholder="Enter notes, moods, or memories..."
+                        autocomplete="off">
+
+                    <button id="searchBtn" class="primary-btn">
+                        <span>Discover</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="suggestions">
-                <span class="suggestion-chip">"Dark roasted coffee and roses"</span>
-                <span class="suggestion-chip">"Clean linen and lavender"</span>
-                <span class="suggestion-chip">"Smoky oud and sweet amber"</span>
+                <span class="suggestion-chip">"Rain on hot asphalt and crushed pine"</span>
+                <span class="suggestion-chip">"A smoky jazz club in 1920"</span>
+                <span class="suggestion-chip">"Clean skin and white musk"</span>
             </div>
         </section>
 
@@ -84,14 +86,8 @@
     <template id="fragranceCardTemplate">
         <article class="fragrance-card glass-panel fade-in">
             <div class="card-header">
-                <div class="match-ring-container">
-                    <svg class="match-ring" viewBox="0 0 36 36">
-                        <path class="ring-bg"
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path class="ring-fill match-ring-circle" stroke-dasharray="0, 100"
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    </svg>
-                    <span class="match-percentage-text">98%</span>
+                <div class="match-stamp-container">
+                    <span class="match-percentage-text">MATCH: 98%</span>
                 </div>
             </div>
             <div class="card-body">
@@ -109,7 +105,7 @@
         </article>
     </template>
 
-    <script src="/static/app.js?v=2"></script>
+    <script src="/static/app.js?v=5"></script>
 </body>
 
 </html>
