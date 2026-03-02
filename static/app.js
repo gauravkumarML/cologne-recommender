@@ -1,11 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('preferenceInput');
-    const genderFilter = document.getElementById('genderFilter');
+    const genderTabs = document.querySelectorAll('#genderTabs .segment');
     const searchBtn = document.getElementById('searchBtn');
     const suggestions = document.querySelectorAll('.suggestion-chip');
     const loader = document.getElementById('loader');
     const resultsSection = document.getElementById('resultsSection');
     const template = document.getElementById('fragranceCardTemplate');
+
+    let currentGender = "All";
+
+    // Handle segmented control clicks
+    genderTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            genderTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentGender = tab.getAttribute('data-value');
+        });
+    });
 
     // Handle suggestion clicks
     suggestions.forEach(chip => {
@@ -50,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     preferences: query,
                     top_k: 6, // Show top 6 matches
-                    gender: genderFilter ? genderFilter.value : "All"
+                    gender: currentGender
                 })
             });
 
@@ -93,7 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clone.querySelector('.brand-name').textContent = item.brand;
         clone.querySelector('.fragrance-name').textContent = item.name;
-        clone.querySelector('.match-percentage').textContent = `${matchPercent}% Match`;
+        
+        // Update the SVG Ring and Text
+        const circleParams = `${matchPercent}, 100`;
+        // Use timeout to allow CSS transition to play from 0 to target
+        setTimeout(() => {
+            const circle = card.querySelector('.match-ring-circle');
+            if (circle) circle.setAttribute('stroke-dasharray', circleParams);
+        }, 50);
+        clone.querySelector('.match-percentage-text').textContent = `${matchPercent}%`;
 
         const notesContainer = clone.querySelector('.notes-container');
 

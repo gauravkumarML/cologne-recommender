@@ -10,13 +10,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=2">
 </head>
 
 <body>
@@ -51,13 +51,12 @@
                 <input type="text" id="preferenceInput"
                     placeholder="Describe your ideal fragrance (e.g., spicy and woody, fresh citrus)..."
                     autocomplete="off">
-                <select id="genderFilter"
-                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; padding: 10px; margin-right: 10px; outline: none; cursor: pointer;">
-                    <option style="color: black;" value="All">All Genders</option>
-                    <option style="color: black;" value="Male">Male</option>
-                    <option style="color: black;" value="Female">Female</option>
-                    <option style="color: black;" value="Unisex">Unisex</option>
-                </select>
+                <div class="gender-segmented-control" id="genderTabs">
+                    <button class="segment active" data-value="All">All</button>
+                    <button class="segment" data-value="Male">Male</button>
+                    <button class="segment" data-value="Female">Female</button>
+                    <button class="segment" data-value="Unisex">Unisex</button>
+                </div>
                 <button id="searchBtn" class="primary-btn">
                     <span>Discover</span>
                     <i class="fa-solid fa-arrow-right"></i>
@@ -85,9 +84,14 @@
     <template id="fragranceCardTemplate">
         <article class="fragrance-card glass-panel fade-in">
             <div class="card-header">
-                <div class="match-badge">
-                    <i class="fa-solid fa-star"></i>
-                    <span class="match-percentage">98% Match</span>
+                <div class="match-ring-container">
+                    <svg class="match-ring" viewBox="0 0 36 36">
+                        <path class="ring-bg"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="ring-fill match-ring-circle" stroke-dasharray="0, 100"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <span class="match-percentage-text">98%</span>
                 </div>
             </div>
             <div class="card-body">
@@ -105,7 +109,7 @@
         </article>
     </template>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=2"></script>
 </body>
 
 </html>
