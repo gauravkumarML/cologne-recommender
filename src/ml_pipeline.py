@@ -6,10 +6,10 @@ import faiss
 from sentence_transformers import SentenceTransformer
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(BASE_DIR, "data", "colognes_basenotes.db")
+DB_PATH = os.path.join(BASE_DIR, "data", "colognes_basenotes.db") 
 INDEX_PATH = os.path.join(BASE_DIR, "data", "cologne_index.faiss")
 MAPPING_PATH = os.path.join(BASE_DIR, "data", "cologne_mapping.json")
-MODEL_NAME = 'all-MiniLM-L6-v2'
+MODEL_NAME = 'all-MiniLM-L6-v2' #yet to be tested
 
 def load_data_from_db():
     conn = sqlite3.connect(DB_PATH)
