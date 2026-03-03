@@ -7,6 +7,7 @@ WORKDIR /app
 # Install system dependencies required for ChromaDB and building sentence-transformers
 RUN apt-get update && apt-get install -y \
     build-essential \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install
