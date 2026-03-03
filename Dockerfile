@@ -19,9 +19,7 @@ RUN mkdir -p /app/data /app/chroma_db
 # Copy project files
 COPY src/ /app/src/
 COPY static/ /app/static/
-# We do not copy data/ or chroma_db/ to avoid overwriting the persistent volume
-# but we will need to copy the initial sqlite DB if it's our source of truth.
-COPY colognes_basenotes.db /app/
+COPY data/ /app/data/
 
 # Expose port
 EXPOSE 8000
