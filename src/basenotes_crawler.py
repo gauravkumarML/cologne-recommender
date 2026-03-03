@@ -5,6 +5,7 @@ import os
 from bs4 import BeautifulSoup
 import nodriver as uc
 import database
+import sys
 
 
 
@@ -210,8 +211,6 @@ async def run_details_scraper(chunk_size=20):
         await asyncio.sleep(10)
 
 if __name__ == "__main__":
-    import sys
-    
 
     if len(sys.argv) > 1 and sys.argv[1] == "dir":
         print("Starting directory scraper...")
