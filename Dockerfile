@@ -22,6 +22,9 @@ COPY src/ /app/src/
 COPY static/ /app/static/
 COPY data/ /app/data/
 
+# Set Python Path so src modules can be imported directly
+ENV PYTHONPATH="/app/src:${PYTHONPATH}"
+
 # Expose port
 EXPOSE 8000
 
